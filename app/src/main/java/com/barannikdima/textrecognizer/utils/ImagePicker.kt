@@ -9,28 +9,24 @@ import java.io.File
 
 
 object ImagePicker {
-    private const val CAMERA_REQUEST = 1000
 
     private val file by lazy {
         val directory = Environment.getExternalStoragePublicDirectory(
                 Environment.DIRECTORY_PICTURES)
         File(directory, "image_to_recognize.jpg").apply {
             mkdir()
-            createNewFile() }
+            createNewFile()
+        }
     }
 
-    fun startCameraActivity(activity: Activity) {
+    fun startCameraActivity(activity: Activity, requestCode: Int) {
         Intent(MediaStore.ACTION_IMAGE_CAPTURE).apply {
             val uri = FileProvider.getUriForFile(activity, "com.barannikdima.textrecognizer.provider", file)
             putExtra(MediaStore.EXTRA_OUTPUT, uri)
             resolveActivity(activity.packageManager)?.let {
-                activity.startActivityForResult(this, CAMERA_REQUEST)
+                activity.startActivityForResult(this, requestCode)
             }
         }
     }
 
-    fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        if (requestCode == CAMERA_REQUEST && resultCode == Activity.RESULT_OK) {
-        }
-    }
 }

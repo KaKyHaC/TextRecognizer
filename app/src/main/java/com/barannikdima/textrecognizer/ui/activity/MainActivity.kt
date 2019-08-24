@@ -24,12 +24,22 @@ class MainActivity : AppCompatActivity() {
     }
 
     fun startCameraActivity(view: View) {
-        if (PermissionUtils.tryWithRequestPermissions(this))
-            ImagePicker.startCameraActivity(this)
+        if (PermissionUtils.tryWithRequestPermissions(this, PERMISSION_REQUEST_CODE))
+            ImagePicker.startCameraActivity(this, CAMERA_REQUEST_CODE)
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        ImagePicker.onActivityResult(requestCode, requestCode, data)
+    }
+
+    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        if (requestCode == PERMISSION_REQUEST_CODE && PermissionUtils.tryWithPermissions(this))
+            ImagePicker.startCameraActivity(this, CAMERA_REQUEST_CODE)
+    }
+
+    companion object {
+        private const val PERMISSION_REQUEST_CODE = 200
+        private const val CAMERA_REQUEST_CODE = 1000
     }
 }
