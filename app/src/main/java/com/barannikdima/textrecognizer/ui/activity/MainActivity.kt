@@ -2,9 +2,11 @@ package com.barannikdima.textrecognizer.ui.activity
 
 import android.content.Intent
 import android.os.Bundle
+import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import com.barannikdima.textrecognizer.R
 import com.barannikdima.textrecognizer.utils.ImagePicker
+import com.barannikdima.textrecognizer.utils.PermissionUtils
 import kotlinx.android.synthetic.main.activity_main.*
 
 
@@ -18,7 +20,12 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun initView() {
-        camera_btn.setOnClickListener { ImagePicker.startCameraActivity(this) }
+        camera_btn.setOnClickListener(::startCameraActivity)
+    }
+
+    fun startCameraActivity(view: View) {
+        if (PermissionUtils.tryWithRequestPermissions(this))
+            ImagePicker.startCameraActivity(this)
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
