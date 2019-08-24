@@ -14,7 +14,9 @@ object ImagePicker {
     private val file by lazy {
         val directory = Environment.getExternalStoragePublicDirectory(
                 Environment.DIRECTORY_PICTURES)
-        File(directory, "image_to_recognize.jpg").apply { createNewFile() }
+        File(directory, "image_to_recognize.jpg").apply {
+            mkdir()
+            createNewFile() }
     }
 
     fun startCameraActivity(activity: Activity) {
