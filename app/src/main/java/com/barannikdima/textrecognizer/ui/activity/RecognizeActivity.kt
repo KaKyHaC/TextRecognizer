@@ -5,8 +5,11 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore
+import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import com.barannikdima.textrecognizer.R
+import com.google.firebase.ml.vision.FirebaseVision
+import com.google.firebase.ml.vision.common.FirebaseVisionImage
 import kotlinx.android.synthetic.main.activity_recognize.*
 
 class RecognizeActivity : AppCompatActivity() {
@@ -18,10 +21,27 @@ class RecognizeActivity : AppCompatActivity() {
         init()
     }
 
-    fun init() {
+    private fun init() {
         val uri = intent.getParcelableExtra<Uri>(URI_EXTRA)
         val bmp = MediaStore.Images.Media.getBitmap(contentResolver, uri)
         image_view.setImageBitmap(bmp)
+
+        val visionImage = FirebaseVisionImage.fromBitmap(bmp)
+
+        val detector = FirebaseVision.getInstance().onDeviceTextRecognizer
+
+        val result = detector.processImage(visionImage)
+                .addOnSuccessListener { firebaseVisionText ->
+                    log("addOnSuccessListener  $firebaseVisionText" )
+                }
+                .addOnFailureListener {
+                    // Task failed with an exception
+                    // ...
+                }
+    }
+
+    private fun log(message: String) {
+        Log.d("RecognizeActivity", message)
     }
 
     companion object {
