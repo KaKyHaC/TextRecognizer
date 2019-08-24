@@ -31,13 +31,17 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun startCameraActivity(view: View) {
-        if (PermissionUtils.tryWithRequestPermissions(this, CAMERA_PERMISSION_REQUEST_CODE))
+        if (PermissionUtils.checkPermissions(this))
             imagePicker.startCameraActivity()
+        else
+            PermissionUtils.requestPermissions(this, CAMERA_PERMISSION_REQUEST_CODE)
     }
 
     private fun startGalleryActivity(view: View) {
-        if (PermissionUtils.tryWithRequestPermissions(this, GALLERY_PERMISSION_REQUEST_CODE))
+        if (PermissionUtils.checkPermissions(this))
             imagePicker.startGalleryActivity()
+        else
+            PermissionUtils.requestPermissions(this, GALLERY_PERMISSION_REQUEST_CODE)
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -47,9 +51,9 @@ class MainActivity : AppCompatActivity() {
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-        if (requestCode == CAMERA_PERMISSION_REQUEST_CODE && PermissionUtils.tryWithPermissions(this))
+        if (requestCode == CAMERA_PERMISSION_REQUEST_CODE && PermissionUtils.checkPermissions(this))
             imagePicker.startCameraActivity()
-        else if (requestCode == GALLERY_PERMISSION_REQUEST_CODE && PermissionUtils.tryWithPermissions(this))
+        else if (requestCode == GALLERY_PERMISSION_REQUEST_CODE && PermissionUtils.checkPermissions(this))
             imagePicker.startGalleryActivity()
     }
 

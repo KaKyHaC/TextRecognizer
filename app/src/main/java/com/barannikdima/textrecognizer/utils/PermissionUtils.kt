@@ -14,7 +14,7 @@ object PermissionUtils {
             Manifest.permission.READ_EXTERNAL_STORAGE
     )
 
-    fun tryWithRequestPermissions(activity: Activity, requestCode: Int): Boolean {
+    fun requestPermissions(activity: Activity, requestCode: Int): Boolean {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             val listToRequest = permissionList.filterNot { isHavePermission(activity, it) }
             if (listToRequest.isEmpty()) return true
@@ -25,12 +25,11 @@ object PermissionUtils {
         return true
     }
 
-    fun tryWithPermissions(activity: Activity): Boolean {
+    fun checkPermissions(activity: Activity): Boolean {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             val listToRequest = permissionList.filterNot { isHavePermission(activity, it) }
             return listToRequest.isEmpty()
         }
-
         return true
     }
 
