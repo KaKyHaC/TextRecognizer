@@ -2,9 +2,9 @@ package com.barannikdima.textrecognizer.utils
 
 import android.app.Activity
 import android.content.Intent
-import android.net.Uri
 import android.os.Environment
 import android.provider.MediaStore
+import androidx.core.content.FileProvider
 import java.io.File
 
 
@@ -19,7 +19,8 @@ object ImagePicker {
 
     fun startCameraActivity(activity: Activity) {
         Intent(MediaStore.ACTION_IMAGE_CAPTURE).apply {
-            putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(file))
+            val uri = FileProvider.getUriForFile(activity, "com.barannikdima.textrecognizer.provider", file)
+            putExtra(MediaStore.EXTRA_OUTPUT, uri)
             resolveActivity(activity.packageManager)?.let {
                 activity.startActivityForResult(this, CAMERA_REQUEST)
             }
