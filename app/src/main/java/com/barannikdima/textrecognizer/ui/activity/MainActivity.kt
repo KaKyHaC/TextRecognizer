@@ -2,6 +2,7 @@ package com.barannikdima.textrecognizer.ui.activity
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import com.barannikdima.textrecognizer.R
@@ -21,32 +22,35 @@ class MainActivity : AppCompatActivity() {
 
     private fun initView() {
         camera_btn.setOnClickListener(::startCameraActivity)
-        gallery_btn.setOnClickListener (::startGalleryActivity)
+        gallery_btn.setOnClickListener(::startGalleryActivity)
     }
 
-    fun startCameraActivity(view: View) {
-        if (PermissionUtils.tryWithRequestPermissions(this, PERMISSION_REQUEST_CODE))
-            ImagePicker.startCameraActivity(this, CAMERA_REQUEST_CODE)
+    private fun startCameraActivity(view: View) {
+        if (PermissionUtils.tryWithRequestPermissions(this, CAMERA_PERMISSION_REQUEST_CODE))
+            ImagePicker.startCameraActivity(this)
     }
 
-    fun startGalleryActivity(view: View) {
-        if (PermissionUtils.tryWithRequestPermissions(this, PERMISSION_REQUEST_CODE))
-            ImagePicker.startGalleryActivity(this, GALLEY_REQUEST_CODE)
+    private fun startGalleryActivity(view: View) {
+        if (PermissionUtils.tryWithRequestPermissions(this, GALLERY_PERMISSION_REQUEST_CODE))
+            ImagePicker.startGalleryActivity(this)
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
+        Log.d("main", "res $data")
     }
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-        if (requestCode == PERMISSION_REQUEST_CODE && PermissionUtils.tryWithPermissions(this))
-            ImagePicker.startCameraActivity(this, CAMERA_REQUEST_CODE)
+        if (requestCode == CAMERA_PERMISSION_REQUEST_CODE && PermissionUtils.tryWithPermissions(this))
+            ImagePicker.startCameraActivity(this)
+        else if (requestCode == GALLERY_PERMISSION_REQUEST_CODE && PermissionUtils.tryWithPermissions(this))
+            ImagePicker.startGalleryActivity(this)
     }
 
     companion object {
-        private const val PERMISSION_REQUEST_CODE = 200
-        private const val CAMERA_REQUEST_CODE = 1000
-        private const val GALLEY_REQUEST_CODE = 1000
+        private const val CAMERA_PERMISSION_REQUEST_CODE = 200
+        private const val GALLERY_PERMISSION_REQUEST_CODE = 201
+
     }
 }

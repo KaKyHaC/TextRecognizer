@@ -10,6 +10,9 @@ import java.io.File
 
 object ImagePicker {
 
+    private const val CAMERA_REQUEST_CODE = 1000
+    private const val GALLEY_REQUEST_CODE = 1001
+
     private val file by lazy {
         val directory = Environment.getExternalStoragePublicDirectory(
                 Environment.DIRECTORY_PICTURES)
@@ -19,18 +22,20 @@ object ImagePicker {
         }
     }
 
-    fun startCameraActivity(activity: Activity, requestCode: Int) {
+    fun startCameraActivity(activity: Activity) {
         Intent(MediaStore.ACTION_IMAGE_CAPTURE).apply {
-            val uri = FileProvider.getUriForFile(activity, "com.barannikdima.textrecognizer.provider", file)
+            val authority = "com.barannikdima.textrecognizer.provider"
+            val uri = FileProvider.getUriForFile(activity, authority, file)
             putExtra(MediaStore.EXTRA_OUTPUT, uri)
-            activity.startActivityForResult(this, requestCode)
+            activity.startActivityForResult(this, CAMERA_REQUEST_CODE)
         }
     }
 
-    fun startGalleryActivity(activity: Activity, requestCode: Int) {
+    fun startGalleryActivity(activity: Activity) {
         Intent(Intent.ACTION_GET_CONTENT).apply {
             setType("image/*");
-            activity.startActivityForResult(Intent.createChooser(this, "Select Picture"), requestCode);
+            val chooser = Intent.createChooser(this, "Select Picture")
+            activity.startActivityForResult(chooser, GALLEY_REQUEST_CODE);
         }
     }
 
