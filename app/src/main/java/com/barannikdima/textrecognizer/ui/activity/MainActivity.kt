@@ -2,6 +2,7 @@ package com.barannikdima.textrecognizer.ui.activity
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import com.barannikdima.textrecognizer.R
@@ -18,12 +19,15 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        initView()
+        init()
     }
 
-    private fun initView() {
+    private fun init() {
         camera_btn.setOnClickListener(::startCameraActivity)
         gallery_btn.setOnClickListener(::startGalleryActivity)
+        imagePicker.onFileSelectedListener = {file ->
+            Log.d("main", "file $file")
+        }
     }
 
     private fun startCameraActivity(view: View) {

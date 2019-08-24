@@ -2,6 +2,7 @@ package com.barannikdima.textrecognizer.utils
 
 import android.app.Activity
 import android.content.Intent
+import android.net.Uri
 import android.os.Environment
 import android.provider.MediaStore
 import androidx.core.content.FileProvider
@@ -38,8 +39,24 @@ class ImagePicker(private val activity: Activity) {
         }
     }
 
-    fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?){
+    fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        if (requestCode == CAMERA_REQUEST_CODE && resultCode == Activity.RESULT_OK) {
+            onFileSelectedListener(file)
+        } else if (requestCode == GALLEY_REQUEST_CODE && resultCode == Activity.RESULT_OK) {
+            data?.data?.let { getPath(it)?.let { onFileSelectedListener(File(it)) } }
+        }
+    }
 
+    fun getPath(uri: Uri): String? {
+        val projection = arrayOf(MediaStore.Images.Media.DATA)
+        val cursor = activity.contentResolver.query(uri, projection, null, null, null)
+        if (cursor == null) return null
+        val column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA)
+        cursor.moveToFirst()
+        val columnIndex = cursor.getColumnIndex(projection[0])
+        val filePath = cursor.getString(columnIndex)
+        cursor.close()
+        return cursor.getString(column_index)
     }
 
     companion object {
