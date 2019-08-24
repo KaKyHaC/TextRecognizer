@@ -59,6 +59,5 @@ class MainActivity : AppCompatActivity() {
     companion object {
         private const val CAMERA_PERMISSION_REQUEST_CODE = 200
         private const val GALLERY_PERMISSION_REQUEST_CODE = 201
-
     }
 }
