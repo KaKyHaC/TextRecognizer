@@ -2,7 +2,6 @@ package com.barannikdima.textrecognizer.ui.activity
 
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import com.barannikdima.textrecognizer.R
@@ -25,8 +24,8 @@ class MainActivity : AppCompatActivity() {
     private fun init() {
         camera_btn.setOnClickListener(::startCameraActivity)
         gallery_btn.setOnClickListener(::startGalleryActivity)
-        imagePicker.onUriSelectedListener = { file ->
-            Log.d("main", "file $file")
+        imagePicker.onUriSelectedListener = {
+            startActivity(RecognizeActivity.createIntent(this, it))
         }
     }
 
