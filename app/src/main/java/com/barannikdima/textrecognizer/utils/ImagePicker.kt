@@ -17,7 +17,9 @@ object ImagePicker {
     private val storageDir = Environment.getExternalStoragePublicDirectory(
             Environment.DIRECTORY_PICTURES)
 
-    private val file = File(storageDir, "image_to_recognize.jpg")
+    private val file = File(storageDir, "image_to_recognize.jpg").apply {
+        createNewFile()
+    }
 
     private val fileUri = Uri.fromFile(file)
 
