@@ -1,5 +1,6 @@
 package com.barannikdima.textrecognizer.ui.activity
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import com.barannikdima.textrecognizer.R
@@ -20,4 +21,8 @@ class MainActivity : AppCompatActivity() {
         camera_btn.setOnClickListener { ImagePicker.startCameraActivity(this) }
     }
 
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        ImagePicker.onActivityResult(requestCode, requestCode, data)
+    }
 }
