@@ -1,13 +1,10 @@
 package com.barannikdima.textrecognizer.ui.activity
 
-import android.content.Intent
 import android.os.Bundle
-import android.provider.MediaStore
-import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import com.barannikdima.textrecognizer.R
+import com.barannikdima.textrecognizer.utils.ImagePicker
 import kotlinx.android.synthetic.main.activity_main.*
-
 
 
 class MainActivity : AppCompatActivity() {
@@ -19,18 +16,8 @@ class MainActivity : AppCompatActivity() {
         initView()
     }
 
-    private fun initView(){
-        camera_btn.setOnClickListener(::startCameraActivity)
+    private fun initView() {
+        camera_btn.setOnClickListener { ImagePicker.startCameraActivity(this) }
     }
 
-    private fun startCameraActivity(view: View) {
-        val cameraIntent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
-        if (cameraIntent.resolveActivity(packageManager) != null) {
-            startActivityForResult(cameraIntent, CAMERA_INTENT)
-        }
-    }
-
-    companion object{
-        private const val CAMERA_INTENT = 1000
-    }
 }
