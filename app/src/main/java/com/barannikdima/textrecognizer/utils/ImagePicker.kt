@@ -11,7 +11,7 @@ import java.io.File
 
 class ImagePicker(private val activity: Activity) {
 
-    var onFileSelectedListener = { _: File -> }
+    var onUriSelectedListener = { _: Uri -> }
 
     private val file by lazy {
         val directory = Environment.getExternalStoragePublicDirectory(
@@ -22,10 +22,14 @@ class ImagePicker(private val activity: Activity) {
         }
     }
 
+    private val uri by lazy {
+        val authority = "com.barannikdima.textrecognizer.provider"
+        FileProvider.getUriForFile(activity, authority, file)
+    }
+
+
     fun startCameraActivity() {
         Intent(MediaStore.ACTION_IMAGE_CAPTURE).apply {
-            val authority = "com.barannikdima.textrecognizer.provider"
-            val uri = FileProvider.getUriForFile(activity, authority, file)
             putExtra(MediaStore.EXTRA_OUTPUT, uri)
             activity.startActivityForResult(this, CAMERA_REQUEST_CODE)
         }
@@ -41,22 +45,10 @@ class ImagePicker(private val activity: Activity) {
 
     fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         if (requestCode == CAMERA_REQUEST_CODE && resultCode == Activity.RESULT_OK) {
-            onFileSelectedListener(file)
+            onUriSelectedListener(uri)
         } else if (requestCode == GALLEY_REQUEST_CODE && resultCode == Activity.RESULT_OK) {
-            data?.data?.let { getPath(it)?.let { onFileSelectedListener(File(it)) } }
+            data?.data?.let { onUriSelectedListener(it) }
         }
-    }
-
-    fun getPath(uri: Uri): String? {
-        val projection = arrayOf(MediaStore.Images.Media.DATA)
-        val cursor = activity.contentResolver.query(uri, projection, null, null, null)
-        if (cursor == null) return null
-        val column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA)
-        cursor.moveToFirst()
-        val columnIndex = cursor.getColumnIndex(projection[0])
-        val filePath = cursor.getString(columnIndex)
-        cursor.close()
-        return cursor.getString(column_index)
     }
 
     companion object {

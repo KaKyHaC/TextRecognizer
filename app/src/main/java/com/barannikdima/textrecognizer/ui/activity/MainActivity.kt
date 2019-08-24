@@ -25,7 +25,7 @@ class MainActivity : AppCompatActivity() {
     private fun init() {
         camera_btn.setOnClickListener(::startCameraActivity)
         gallery_btn.setOnClickListener(::startGalleryActivity)
-        imagePicker.onFileSelectedListener = {file ->
+        imagePicker.onUriSelectedListener = { file ->
             Log.d("main", "file $file")
         }
     }
