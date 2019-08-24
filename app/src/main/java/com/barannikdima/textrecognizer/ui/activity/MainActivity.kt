@@ -1,10 +1,11 @@
-package com.barannikdima.textrecognizer
+package com.barannikdima.textrecognizer.ui.activity
 
 import android.content.Intent
 import android.os.Bundle
 import android.provider.MediaStore
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
+import com.barannikdima.textrecognizer.R
 import kotlinx.android.synthetic.main.activity_main.*
 
 
