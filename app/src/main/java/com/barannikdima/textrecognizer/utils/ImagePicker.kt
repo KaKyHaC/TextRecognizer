@@ -23,9 +23,14 @@ object ImagePicker {
         Intent(MediaStore.ACTION_IMAGE_CAPTURE).apply {
             val uri = FileProvider.getUriForFile(activity, "com.barannikdima.textrecognizer.provider", file)
             putExtra(MediaStore.EXTRA_OUTPUT, uri)
-            resolveActivity(activity.packageManager)?.let {
-                activity.startActivityForResult(this, requestCode)
-            }
+            activity.startActivityForResult(this, requestCode)
+        }
+    }
+
+    fun startGalleryActivity(activity: Activity, requestCode: Int) {
+        Intent(Intent.ACTION_GET_CONTENT).apply {
+            setType("image/*");
+            activity.startActivityForResult(Intent.createChooser(this, "Select Picture"), requestCode);
         }
     }
 

@@ -21,11 +21,17 @@ class MainActivity : AppCompatActivity() {
 
     private fun initView() {
         camera_btn.setOnClickListener(::startCameraActivity)
+        gallery_btn.setOnClickListener (::startGalleryActivity)
     }
 
     fun startCameraActivity(view: View) {
         if (PermissionUtils.tryWithRequestPermissions(this, PERMISSION_REQUEST_CODE))
             ImagePicker.startCameraActivity(this, CAMERA_REQUEST_CODE)
+    }
+
+    fun startGalleryActivity(view: View) {
+        if (PermissionUtils.tryWithRequestPermissions(this, PERMISSION_REQUEST_CODE))
+            ImagePicker.startGalleryActivity(this, GALLEY_REQUEST_CODE)
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -41,5 +47,6 @@ class MainActivity : AppCompatActivity() {
     companion object {
         private const val PERMISSION_REQUEST_CODE = 200
         private const val CAMERA_REQUEST_CODE = 1000
+        private const val GALLEY_REQUEST_CODE = 1000
     }
 }
