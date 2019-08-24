@@ -2,7 +2,6 @@ package com.barannikdima.textrecognizer.ui.activity
 
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import com.barannikdima.textrecognizer.R
@@ -12,6 +11,8 @@ import kotlinx.android.synthetic.main.activity_main.*
 
 
 class MainActivity : AppCompatActivity() {
+
+    private val imagePicker by lazy { ImagePicker(this) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -27,25 +28,25 @@ class MainActivity : AppCompatActivity() {
 
     private fun startCameraActivity(view: View) {
         if (PermissionUtils.tryWithRequestPermissions(this, CAMERA_PERMISSION_REQUEST_CODE))
-            ImagePicker.startCameraActivity(this)
+            imagePicker.startCameraActivity()
     }
 
     private fun startGalleryActivity(view: View) {
         if (PermissionUtils.tryWithRequestPermissions(this, GALLERY_PERMISSION_REQUEST_CODE))
-            ImagePicker.startGalleryActivity(this)
+            imagePicker.startGalleryActivity()
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        Log.d("main", "res $data")
+        imagePicker.onActivityResult(requestCode, resultCode, data)
     }
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         if (requestCode == CAMERA_PERMISSION_REQUEST_CODE && PermissionUtils.tryWithPermissions(this))
-            ImagePicker.startCameraActivity(this)
+            imagePicker.startCameraActivity()
         else if (requestCode == GALLERY_PERMISSION_REQUEST_CODE && PermissionUtils.tryWithPermissions(this))
-            ImagePicker.startGalleryActivity(this)
+            imagePicker.startGalleryActivity()
     }
 
     companion object {
