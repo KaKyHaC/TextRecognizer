@@ -22,11 +22,20 @@ object BitmapUtils {
             }
 
     fun loadRotatedBitmap(uri: Uri, activity: Activity): Bitmap {
-        val exifInterface = ExifInterface(activity.contentResolver.openInputStream(uri))
         val originImage = MediaStore.Images.Media.getBitmap(activity.contentResolver, uri)
-        val matrix = Matrix()
-        matrix.postRotate(exifInterface.rotationDegrees.toFloat())
-        val rotatedBitmap = Bitmap.createBitmap(originImage, 0, 0, originImage.getWidth(), originImage.getHeight(), matrix, true)
-        return rotatedBitmap
+        activity.contentResolver.openInputStream(uri)?.let {
+            val exifInterface = ExifInterface(it)
+            val matrix = Matrix().apply { postRotate(exifInterface.rotationDegrees.toFloat()) }
+            return Bitmap.createBitmap(
+                    originImage,
+                    0,
+                    0,
+                    originImage.getWidth(),
+                    originImage.getHeight(),
+                    matrix,
+                    true
+            )
+        }
+        return originImage
     }
 }
