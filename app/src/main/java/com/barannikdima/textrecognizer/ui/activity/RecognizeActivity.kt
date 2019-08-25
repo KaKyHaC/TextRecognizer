@@ -35,7 +35,7 @@ class RecognizeActivity : AppCompatActivity() {
         val uri = intent.getParcelableExtra<Uri>(URI_EXTRA)
         originImage = BitmapUtils.loadRotatedBitmap(uri, this)
         image_view.setImageBitmap(originImage)
-        recognizeUtils.recognize(originImage!!)
+        recognizeUtils.recognize(originImage!!, ::onFoundText)
     }
 
     private fun onEditorAction(v: TextView, actionId: Int?, event: KeyEvent?): Boolean {
@@ -47,11 +47,18 @@ class RecognizeActivity : AppCompatActivity() {
     }
 
     private fun startFinding() {
-        recognizeUtils.find(search_text.text.toString(), ::onFound)
+        recognizeUtils.find(search_text.text.toString(), ::onFoundWord)
     }
 
-    private fun onFound(rects: List<Rect>) {
-        originImage?.let { bmp -> image_view.setImageBitmap(BitmapUtils.drawRects(bmp, rects)) }
+    private fun onFoundText(rects: List<Rect>) {
+        originImage?.let { bmp ->
+            originImage = BitmapUtils.strokeRects(bmp, rects)
+            image_view.setImageBitmap(originImage)
+        }
+    }
+
+    private fun onFoundWord(rects: List<Rect>) {
+        originImage?.let { bmp -> image_view.setImageBitmap(BitmapUtils.fillRects(bmp, rects)) }
     }
 
     companion object {
