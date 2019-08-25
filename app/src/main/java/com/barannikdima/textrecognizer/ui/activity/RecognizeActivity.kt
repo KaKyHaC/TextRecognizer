@@ -6,6 +6,7 @@ import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore
 import android.util.Log
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.barannikdima.textrecognizer.R
 import com.google.firebase.ml.vision.FirebaseVision
@@ -35,13 +36,16 @@ class RecognizeActivity : AppCompatActivity() {
                     log("addOnSuccessListener  $firebaseVisionText" )
                 }
                 .addOnFailureListener {
+                    log("fail $it")
                     // Task failed with an exception
                     // ...
                 }
+
     }
 
     private fun log(message: String) {
         Log.d("RecognizeActivity", message)
+        Toast.makeText(this, message, Toast.LENGTH_LONG).show()
     }
 
     companion object {
