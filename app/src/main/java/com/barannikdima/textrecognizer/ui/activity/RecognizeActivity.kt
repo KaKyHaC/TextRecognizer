@@ -2,6 +2,7 @@ package com.barannikdima.textrecognizer.ui.activity
 
 import android.content.Context
 import android.content.Intent
+import android.graphics.Rect
 import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore
@@ -9,6 +10,7 @@ import android.util.Log
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.barannikdima.textrecognizer.R
+import com.barannikdima.textrecognizer.utils.PaintUtils
 import com.barannikdima.textrecognizer.utils.RecognizeUtils
 import kotlinx.android.synthetic.main.activity_recognize.*
 
@@ -30,7 +32,8 @@ class RecognizeActivity : AppCompatActivity() {
             }
         }
         val uri = intent.getParcelableExtra<Uri>(URI_EXTRA)
-        val bmp = MediaStore.Images.Media.getBitmap(contentResolver, uri)
+        var bmp = MediaStore.Images.Media.getBitmap(contentResolver, uri)
+        bmp = PaintUtils.printRect(bmp, Rect(10,100,10,100))
         image_view.setImageBitmap(bmp)
         recognizeUtils.recognize(bmp)
     }
