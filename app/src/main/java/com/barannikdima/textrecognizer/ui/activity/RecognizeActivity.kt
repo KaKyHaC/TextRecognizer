@@ -9,11 +9,12 @@ import android.util.Log
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.barannikdima.textrecognizer.R
-import com.google.firebase.ml.vision.FirebaseVision
-import com.google.firebase.ml.vision.common.FirebaseVisionImage
+import com.barannikdima.textrecognizer.utils.RecognizeUtils
 import kotlinx.android.synthetic.main.activity_recognize.*
 
 class RecognizeActivity : AppCompatActivity() {
+
+    private val recognizeUtils by lazy { RecognizeUtils() }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -23,24 +24,15 @@ class RecognizeActivity : AppCompatActivity() {
     }
 
     private fun init() {
+        search_btn.setOnClickListener {
+            recognizeUtils.find(search_text.text.toString()) {
+                log(it.toString())
+            }
+        }
         val uri = intent.getParcelableExtra<Uri>(URI_EXTRA)
         val bmp = MediaStore.Images.Media.getBitmap(contentResolver, uri)
         image_view.setImageBitmap(bmp)
-
-        val visionImage = FirebaseVisionImage.fromBitmap(bmp)
-
-        val detector = FirebaseVision.getInstance().onDeviceTextRecognizer
-
-        val result = detector.processImage(visionImage)
-                .addOnSuccessListener { firebaseVisionText ->
-                    log("addOnSuccessListener  $firebaseVisionText" )
-                }
-                .addOnFailureListener {
-                    log("fail $it")
-                    // Task failed with an exception
-                    // ...
-                }
-
+        recognizeUtils.recognize(bmp)
     }
 
     private fun log(message: String) {
