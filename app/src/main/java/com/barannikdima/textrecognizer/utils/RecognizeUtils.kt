@@ -18,7 +18,7 @@ class RecognizeUtils {
         recognizeResult = null
         val visionImage = FirebaseVisionImage.fromBitmap(bitmap)
         recognizeResult = detector.processImage(visionImage)
-            .addOnFailureListener { Log.d("RecognizeUtils", it.toString()) }
+                .addOnFailureListener { Log.d("RecognizeUtils", it.toString()) }
     }
 
     fun find(text: String, onFound: RectListCallback) {
@@ -30,19 +30,21 @@ class RecognizeUtils {
     }
 
     private fun find(
-        firebaseVisionText: FirebaseVisionText,
-        text: String,
-        onFound: RectListCallback
+            firebaseVisionText: FirebaseVisionText,
+            text: String,
+            onFound: RectListCallback
     ) {
+        val text = text.toLowerCase()
         val result = mutableListOf<Rect>()
         firebaseVisionText.textBlocks
-            .forEach {
-                it.lines.forEach {
-                    it.elements.forEach {
-                        if (it.text.contains(text)) it.boundingBox?.let { result.add(it) }
+                .forEach {
+                    it.lines.forEach {
+                        it.elements.forEach {
+                            if (it.text.toLowerCase().contains(text))
+                                it.boundingBox?.let { result.add(it) }
+                        }
                     }
                 }
-            }
         onFound(result)
     }
 }
