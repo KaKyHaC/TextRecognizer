@@ -10,6 +10,7 @@ object PaintUtils {
         val paint = Paint().apply {
             color = Color.GREEN
             alpha = 100
+            style = Paint.Style.FILL
         }
         canvas.drawRect(rect, paint)
         return bitmap
