@@ -9,17 +9,29 @@ import androidx.exifinterface.media.ExifInterface
 
 object BitmapUtils {
 
-    private val paint = Paint().apply {
+    private val fillPaint = Paint().apply {
         color = Color.GREEN
-        alpha = 100
         style = Paint.Style.FILL
+        alpha = 100
     }
 
-    fun drawRects(bitmap: Bitmap, rects: List<Rect>) =
-            bitmap.copy(Bitmap.Config.ARGB_8888, true).apply {
-                val canvas = Canvas(this)
-                rects.forEach { canvas.drawRect(it, paint) }
-            }
+    private val strokePaint = Paint().apply {
+        color = Color.RED
+        style = Paint.Style.STROKE
+        strokeWidth = 2f
+    }
+
+    fun strokeRects(bitmap: Bitmap, rects: List<Rect>) =
+        bitmap.copy(Bitmap.Config.ARGB_8888, true).apply {
+            val canvas = Canvas(this)
+            rects.forEach { canvas.drawRect(it, strokePaint) }
+        }
+
+    fun fillRects(bitmap: Bitmap, rects: List<Rect>) =
+        bitmap.copy(Bitmap.Config.ARGB_8888, true).apply {
+            val canvas = Canvas(this)
+            rects.forEach { canvas.drawRect(it, fillPaint) }
+        }
 
     fun loadRotatedBitmap(uri: Uri, activity: Activity): Bitmap {
         val originImage = MediaStore.Images.Media.getBitmap(activity.contentResolver, uri)
@@ -27,13 +39,13 @@ object BitmapUtils {
             val exifInterface = ExifInterface(it)
             val matrix = Matrix().apply { postRotate(exifInterface.rotationDegrees.toFloat()) }
             return Bitmap.createBitmap(
-                    originImage,
-                    0,
-                    0,
-                    originImage.getWidth(),
-                    originImage.getHeight(),
-                    matrix,
-                    true
+                originImage,
+                0,
+                0,
+                originImage.getWidth(),
+                originImage.getHeight(),
+                matrix,
+                true
             )
         }
         return originImage
