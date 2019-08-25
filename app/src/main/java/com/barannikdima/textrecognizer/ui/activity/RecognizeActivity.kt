@@ -33,7 +33,7 @@ class RecognizeActivity : AppCompatActivity() {
         }
         val uri = intent.getParcelableExtra<Uri>(URI_EXTRA)
         var bmp = MediaStore.Images.Media.getBitmap(contentResolver, uri)
-        bmp = PaintUtils.printRect(bmp, Rect(10,10,200,100))
+        bmp = PaintUtils.printRect(bmp, Rect(10,10,200,200))
         image_view.setImageBitmap(bmp)
         recognizeUtils.recognize(bmp)
     }
