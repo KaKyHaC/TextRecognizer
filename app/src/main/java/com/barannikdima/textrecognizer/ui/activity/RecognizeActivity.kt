@@ -7,13 +7,15 @@ import android.graphics.Rect
 import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore
-import android.util.Log
-import android.widget.Toast
+import android.view.KeyEvent
+import android.view.inputmethod.EditorInfo
+import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import com.barannikdima.textrecognizer.R
 import com.barannikdima.textrecognizer.utils.PaintUtils
 import com.barannikdima.textrecognizer.utils.RecognizeUtils
 import kotlinx.android.synthetic.main.activity_recognize.*
+
 
 class RecognizeActivity : AppCompatActivity() {
 
@@ -29,20 +31,28 @@ class RecognizeActivity : AppCompatActivity() {
     }
 
     private fun init() {
-        search_btn.setOnClickListener { recognizeUtils.find(search_text.text.toString(), ::onFound) }
+        search_btn.setOnClickListener { startFinding() }
+        search_text.setOnEditorActionListener(::onEditorAction)
         val uri = intent.getParcelableExtra<Uri>(URI_EXTRA)
         originImage = MediaStore.Images.Media.getBitmap(contentResolver, uri)
         image_view.setImageBitmap(originImage)
         recognizeUtils.recognize(originImage!!)
     }
 
-    private fun onFound(rects: List<Rect>) {
-        originImage?.let { bmp -> image_view.setImageBitmap(PaintUtils.drawRects(bmp, rects)) }
+    private fun onEditorAction(v: TextView, actionId: Int, event: KeyEvent): Boolean {
+        if (actionId == EditorInfo.IME_ACTION_DONE) {
+            startFinding()
+            return true
+        }
+        return false
     }
 
-    private fun log(message: String) {
-        Log.d("RecognizeActivity", message)
-        Toast.makeText(this, message, Toast.LENGTH_LONG).show()
+    private fun startFinding() {
+        recognizeUtils.find(search_text.text.toString(), ::onFound)
+    }
+
+    private fun onFound(rects: List<Rect>) {
+        originImage?.let { bmp -> image_view.setImageBitmap(PaintUtils.drawRects(bmp, rects)) }
     }
 
     companion object {
