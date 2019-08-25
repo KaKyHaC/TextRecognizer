@@ -14,37 +14,38 @@ class RecognizeUtils {
 
     private var recognizeResult: Task<FirebaseVisionText>? = null
 
-    fun recognize(bitmap: Bitmap) {
+    fun recognize(bitmap: Bitmap, onFound: RectListCallback) {
         recognizeResult = null
         val visionImage = FirebaseVisionImage.fromBitmap(bitmap)
         recognizeResult = detector.processImage(visionImage)
-                .addOnFailureListener { Log.d("RecognizeUtils", it.toString()) }
+            .addOnSuccessListener { onFound(it.textBlocks.map { it.boundingBox }.filterNotNull()) }
+            .addOnFailureListener { Log.d("RecognizeUtils", it.toString()) }
     }
 
-    fun find(text: String, onFound: RectListCallback) {
+    fun find(word: String, onFound: RectListCallback) {
         if (recognizeResult?.isSuccessful.isTrue()) {
-            recognizeResult?.result?.let { find(it, text, onFound) }
+            recognizeResult?.result?.let { find(it, word, onFound) }
         } else {
-            recognizeResult?.addOnSuccessListener { find(it, text, onFound) }
+            recognizeResult?.addOnSuccessListener { find(it, word, onFound) }
         }
     }
 
     private fun find(
-            firebaseVisionText: FirebaseVisionText,
-            text: String,
-            onFound: RectListCallback
+        firebaseVisionText: FirebaseVisionText,
+        word: String,
+        onFound: RectListCallback
     ) {
-        val text = text.toLowerCase()
+        val text = word.toLowerCase()
         val result = mutableListOf<Rect>()
         firebaseVisionText.textBlocks
-                .forEach {
-                    it.lines.forEach {
-                        it.elements.forEach {
-                            if (it.text.toLowerCase().contains(text))
-                                it.boundingBox?.let { result.add(it) }
-                        }
+            .forEach {
+                it.lines.forEach {
+                    it.elements.forEach {
+                        if (it.text.toLowerCase().contains(text))
+                            it.boundingBox?.let { result.add(it) }
                     }
                 }
+            }
         onFound(result)
     }
 }
