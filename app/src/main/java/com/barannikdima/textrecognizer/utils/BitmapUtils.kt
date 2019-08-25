@@ -1,8 +1,12 @@
 package com.barannikdima.textrecognizer.utils
 
+import android.app.Activity
 import android.graphics.*
+import android.net.Uri
+import android.provider.MediaStore
+import androidx.exifinterface.media.ExifInterface
 
-object PaintUtils {
+object BitmapUtils {
 
     private val paint = Paint().apply {
         color = Color.GREEN
@@ -16,4 +20,9 @@ object PaintUtils {
                 rects.forEach { canvas.drawRect(it, paint) }
             }
 
+    fun loadRotatedBitmap(uri: Uri, activity: Activity): Bitmap {
+        ExifInterface(activity.contentResolver.openInputStream(uri))
+        val originImage = MediaStore.Images.Media.getBitmap(activity.contentResolver, uri)
+        return originImage
+    }
 }
