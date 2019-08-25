@@ -1,6 +1,7 @@
 package com.barannikdima.textrecognizer.utils
 
 import android.graphics.Bitmap
+import android.graphics.Rect
 import android.util.Log
 import com.google.android.gms.tasks.Task
 import com.google.firebase.ml.vision.FirebaseVision
@@ -33,6 +34,15 @@ class RecognizeUtils {
         text: String,
         onFound: RectListCallback
     ) {
-
+        val result = mutableListOf<Rect>()
+        firebaseVisionText.textBlocks
+            .forEach {
+                it.lines.forEach {
+                    it.elements.forEach {
+                        if (it.text.contains(text)) it.boundingBox?.let { result.add(it) }
+                    }
+                }
+            }
+        onFound(result)
     }
 }
