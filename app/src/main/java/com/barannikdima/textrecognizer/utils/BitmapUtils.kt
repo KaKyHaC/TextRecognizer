@@ -6,6 +6,7 @@ import android.net.Uri
 import android.provider.MediaStore
 import androidx.exifinterface.media.ExifInterface
 
+
 object BitmapUtils {
 
     private val paint = Paint().apply {
@@ -21,8 +22,11 @@ object BitmapUtils {
             }
 
     fun loadRotatedBitmap(uri: Uri, activity: Activity): Bitmap {
-        ExifInterface(activity.contentResolver.openInputStream(uri))
+        val exifInterface = ExifInterface(activity.contentResolver.openInputStream(uri))
         val originImage = MediaStore.Images.Media.getBitmap(activity.contentResolver, uri)
-        return originImage
+        val matrix = Matrix()
+        matrix.postRotate(exifInterface.rotationDegrees.toFloat())
+        val rotatedBitmap = Bitmap.createBitmap(originImage, 0, 0, originImage.getWidth(), originImage.getHeight(), matrix, true)
+        return rotatedBitmap
     }
 }
