@@ -10,9 +10,10 @@ object PaintUtils {
         style = Paint.Style.FILL
     }
 
-    fun printRect(bitmap: Bitmap, rect: Rect) =
+    fun drawRects(bitmap: Bitmap, rects: List<Rect>) =
             bitmap.copy(Bitmap.Config.ARGB_8888, true).apply {
-                Canvas(this).drawRect(rect, paint)
+                val canvas = Canvas(this)
+                rects.forEach { canvas.drawRect(it, paint) }
             }
 
 }

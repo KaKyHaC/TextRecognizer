@@ -2,6 +2,7 @@ package com.barannikdima.textrecognizer.ui.activity
 
 import android.content.Context
 import android.content.Intent
+import android.graphics.Bitmap
 import android.graphics.Rect
 import android.net.Uri
 import android.os.Bundle
@@ -18,6 +19,8 @@ class RecognizeActivity : AppCompatActivity() {
 
     private val recognizeUtils by lazy { RecognizeUtils() }
 
+    private var originImage: Bitmap? = null
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_recognize)
@@ -26,16 +29,15 @@ class RecognizeActivity : AppCompatActivity() {
     }
 
     private fun init() {
-        search_btn.setOnClickListener {
-            recognizeUtils.find(search_text.text.toString()) {
-                log(it.toString())
-            }
-        }
+        search_btn.setOnClickListener { recognizeUtils.find(search_text.text.toString(), ::onFound) }
         val uri = intent.getParcelableExtra<Uri>(URI_EXTRA)
-        var bmp = MediaStore.Images.Media.getBitmap(contentResolver, uri)
-        bmp = PaintUtils.printRect(bmp, Rect(10,10,200,200))
-        image_view.setImageBitmap(bmp)
-        recognizeUtils.recognize(bmp)
+        originImage = MediaStore.Images.Media.getBitmap(contentResolver, uri)
+        image_view.setImageBitmap(originImage)
+        recognizeUtils.recognize(originImage!!)
+    }
+
+    private fun onFound(rects: List<Rect>) {
+        originImage?.let { bmp -> image_view.setImageBitmap(PaintUtils.drawRects(bmp, rects)) }
     }
 
     private fun log(message: String) {
